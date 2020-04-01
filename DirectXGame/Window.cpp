@@ -1,23 +1,39 @@
 #include "Window.h"
 
-Window* window = nullptr;
+//Window* window = nullptr;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	switch (msg)
 	{
 	case WM_CREATE:
+	{
+		// Event fired when the window is created
+		// collected here..
+		LPVOID test = ((LPCREATESTRUCT)lparam)->lpCreateParams;
+		Window* window = (Window*)((LPCREATESTRUCT)lparam)->lpCreateParams;
+
+		// .. and then stored for later lookup
+		SetWindowLongPtr(hwnd, GWL_USERDATA, (LONG_PTR)window);
+
+		window->setHWND(hwnd);
 		window->onCreate();
 		break;
+	}
 	case WM_DESTROY:
+	{
+		// Event fired when the window is destroyed
+		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		window->onDestroy();
 		::PostQuitMessage(0);
 		break;
+	}
 	default:
 		return ::DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 
 	return NULL;
 }
+
 bool Window::init()
 {
 	WNDCLASSEX wc;
@@ -32,16 +48,16 @@ bool Window::init()
 	wc.lpszClassName = L"MyWindowsClassName";
 	wc.lpszMenuName = L"";
 	wc.style = NULL;
-	wc.lpfnWndProc = WndProc;
+	wc.lpfnWndProc = &WndProc;
 
 	if (!::RegisterClassEx(&wc))
 		return false;
 	
-	if (!window)
-		window = this;
+	/*if (!window)
+		window = this;*/
 
 	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyWindowsClassName", L"DirectX application", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
-		NULL, NULL, NULL, NULL);
+		NULL, NULL, NULL, this);
 
 	if (!m_hwnd)
 		return false;
@@ -64,7 +80,7 @@ bool Window::broadcast()
 		DispatchMessage(&msg);
 	}
 
-	window->onUpdate();
+	this->onUpdate();
 
 	Sleep(0);
 
@@ -82,6 +98,18 @@ bool Window::release()
 bool Window::isRun()
 {
 	return m_is_run;
+}
+
+RECT Window::getClientWindowRect()
+{
+	RECT rc;
+	::GetClientRect(this->m_hwnd, &rc);
+	return rc;
+}
+ 
+void Window::setHWND(HWND hwnd)
+{
+	this->m_hwnd = hwnd;
 }
 
 void Window::onCreate()
