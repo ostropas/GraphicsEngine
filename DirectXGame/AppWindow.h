@@ -2,6 +2,9 @@
 #include "Window.h"
 #include "GraphicsEngine.h"
 #include "SwapChain.h"
+#include "DeviceContext.h"
+#include "PingPongValue.cpp"
+template class PingPongValue<float>;
 
 class AppWindow : public Window
 {

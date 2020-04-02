@@ -1,6 +1,6 @@
 #include "AppWindow.h"
 
-//http://www.youtube.com/watch?v=ssGka-bSTvQ
+// https://www.youtube.com/playlist?list=PLv8DnRaQOs5-ST_VDqgbbMRtzMtpK36Hy
 
 int main() {
 	AppWindow app;
