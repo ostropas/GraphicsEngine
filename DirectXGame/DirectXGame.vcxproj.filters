@@ -22,6 +22,9 @@
     <Filter Include="GameEngine\GraphicsEngine\Utils">
       <UniqueIdentifier>{a2e2ed8d-ce5f-435d-95d8-0202910c4329}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\VertexBuffer">
+      <UniqueIdentifier>{ac841ce0-c2fc-4b35-9668-9487dce24557}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -45,6 +48,9 @@
     <ClCompile Include="PingPongValue.cpp">
       <Filter>GameEngine\GraphicsEngine\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>GameEngine\GraphicsEngine\VertexBuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -64,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="PingPongValue.h">
       <Filter>GameEngine\GraphicsEngine\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>GameEngine\GraphicsEngine\VertexBuffer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
