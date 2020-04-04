@@ -1,6 +1,8 @@
 #include "AppWindow.h"
+#include <wchar.h>
+#include <stdlib.h>
 
-int main() {
+int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
 	AppWindow app;
 	if (app.init()) {
 
