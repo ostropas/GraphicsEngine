@@ -32,15 +32,21 @@ void AppWindow::onCreate()
 	GraphicsEngine::get()->createShaders();
 
 	void* shader_byte_code = nullptr;
-	UINT size_shader = 0;
-	GraphicsEngine::get()->getShaderBufferAndSize(&shader_byte_code, &size_shader);
+	size_t size_shader = 0;
+
+	GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+
+	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
 
 	m_vb->load(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
+
+
+	GraphicsEngine::get()->releaseCompiledShader();
 }
 
-PingPongValue<float> r { 0, 1, 0.0002f, 0 };
-PingPongValue<float> g { 0, 1, 0.0001f, 0.5f };
-PingPongValue<float> b { 0, 1, 0.0003f, 1 };
+PingPongValue<float> r { 0, 1, 0.0001f, 0 };
+PingPongValue<float> g { 0, 1, 0.0001f, 0 };
+PingPongValue<float> b { 0, 1, 0.0001f, 0 };
 void AppWindow::onUpdate()
 {
 	Window::onUpdate();
@@ -54,6 +60,7 @@ void AppWindow::onUpdate()
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 	GraphicsEngine::get()->setShaders();
+	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
 
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
 

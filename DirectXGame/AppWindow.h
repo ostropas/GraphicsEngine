@@ -5,6 +5,7 @@
 #include "DeviceContext.h"
 #include "PingPongValue.cpp"
 #include "VertexBuffer.h"
+#include "VertexShader.h"
 
 template class PingPongValue<float>;
 
@@ -18,5 +19,6 @@ public:
 private:
 	SwapChain* m_swap_chain;
 	VertexBuffer* m_vb;
+	VertexShader* m_vs;
 };
 
