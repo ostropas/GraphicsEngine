@@ -8,6 +8,7 @@ struct  vec3
 struct vertex
 {
 	vec3 position;
+	vec3 color;
 };
 
 void AppWindow::onCreate()
@@ -20,47 +21,44 @@ void AppWindow::onCreate()
 	m_swap_chain->init(this->m_hwnd, rc.right-rc.left, rc.bottom-rc.top);
 
 	vertex list[] = {
-		{-0.5f, -0.5f, 0.0f},
-		{-0.5, 0.5f, 0.0f},
-		{0.5f, -0.5f, 0.0f},
-		{0.5f, 0.5f, 0.0f}
+		{-0.5f, -0.5f, 0.0f,	1, 0, 0},
+		{-0.5, 0.5f, 0.0f,		0, 1, 0},
+		{0.5f, -0.5f, 0.0f,		0, 0, 1},
+		{0.5f, 0.5f, 0.0f,		1, 1, 0}
 	};
 
 	m_vb = GraphicsEngine::get()->createVertexBuffer();
 	UINT size_list = ARRAYSIZE(list);
 
-	GraphicsEngine::get()->createShaders();
-
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 
 	GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
-
 	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
-
 	m_vb->load(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
-
-
 	GraphicsEngine::get()->releaseCompiledShader();
+
+
+	GraphicsEngine::get()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	m_ps = GraphicsEngine::get()->createPixelShader(shader_byte_code, size_shader);
+	GraphicsEngine::get()->releaseCompiledShader();
+
 }
 
-PingPongValue<float> r { 0, 1, 0.0001f, 0 };
-PingPongValue<float> g { 0, 1, 0.0001f, 0 };
-PingPongValue<float> b { 0, 1, 0.0001f, 0 };
 void AppWindow::onUpdate()
 {
 	Window::onUpdate();
 	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
-		r.value, g.value, b.value, 1);
-
-	r.step();
-	g.step();
-	b.step();
+		0, 0, 0.3f, 1);
 
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
-	GraphicsEngine::get()->setShaders();
+	
+	
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
+	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
+
+
 
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
 
@@ -74,5 +72,7 @@ void AppWindow::onDestroy()
 	Window::onDestroy();
 	m_vb->release();
 	m_swap_chain->release();
+	m_vs->release();
+	m_ps->release();
 	GraphicsEngine::get()->release();
 }
