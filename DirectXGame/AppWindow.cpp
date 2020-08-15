@@ -27,7 +27,7 @@ AppWindow::AppWindow()
 {
 }
 
-void AppWindow::updateQuadPosition()
+void AppWindow::update()
 {
 	constant cc;
 	cc.m_time = ::GetTickCount();
@@ -39,6 +39,7 @@ void AppWindow::updateQuadPosition()
 
 	Matrix4x4 temp;
 
+	/*
 	m_delta_scale += m_delta_time / 0.55f;
 
 	if (m_scale_cube != m_new_scale_cube) {
@@ -48,9 +49,9 @@ void AppWindow::updateQuadPosition()
 
 		if (std::abs(m_scale_cube - m_new_scale_cube) < 0.01)
 			m_scale_cube = m_new_scale_cube;
-	}
+	}*/
 
-	cc.m_world.setScale(Vector3D(m_scale_cube, m_scale_cube, m_scale_cube));
+	/*cc.m_world.setScale(Vector3D(m_scale_cube, m_scale_cube, m_scale_cube));
 
 	temp.setIdentity();
 	temp.setRotationZ(0);
@@ -62,16 +63,46 @@ void AppWindow::updateQuadPosition()
 
 	temp.setIdentity();
 	temp.setRotationX(m_rot_x);
-	cc.m_world *= temp;
+	cc.m_world *= temp;*/
+
+	cc.m_world.setIdentity();
+
+	Matrix4x4 world_cam;
+	world_cam.setIdentity();
+
+	temp.setIdentity();
+	temp.setRotationX(m_rot_x);
+	world_cam *= temp;
+
+	temp.setIdentity();
+	temp.setRotationY(m_rot_y);
+	world_cam *= temp;
+
+	world_cam.setTranslation(Vector3D(0, 0, -2));
+
+	world_cam.inverse();
 
 
-	cc.m_view.setIdentity();
-	cc.m_proj.setOrthoLH
+
+
+	cc.m_view = world_cam;
+	/*cc.m_proj.setOrthoLH
 	(
 		(this->getClientWindowRect().right - this->getClientWindowRect().left) / 300.0f,
 		(this->getClientWindowRect().bottom - this->getClientWindowRect().top) / 300.0f,
 		-4.0f,
 		4.0f
+	);*/
+
+	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
+	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
+
+	cc.m_proj.setPerspectiveFovLH
+	(
+		1.57f,
+		((float)width/(float)height),
+		0.1f,
+		100.0f
 	);
 
 
@@ -185,7 +216,7 @@ void AppWindow::onUpdate()
 
 
 
-	updateQuadPosition();
+	update();
 
 
 
@@ -259,8 +290,8 @@ void AppWindow::onKeyUp(int key)
 
 void AppWindow::onMouseMove(const Point& delta_mouse_pos)
 {
-	m_rot_x -= delta_mouse_pos.m_y * m_delta_time;
-	m_rot_y -= delta_mouse_pos.m_x * m_delta_time;
+	m_rot_x -= delta_mouse_pos.m_y * m_delta_time * 0.1f;
+	m_rot_y -= delta_mouse_pos.m_x * m_delta_time * 0.1f;
 }
 
 void AppWindow::onLeftMouseDown(const Point& mouse_pos)
