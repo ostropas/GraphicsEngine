@@ -1,5 +1,6 @@
 #include "AppWindow.h"
 #include <Windows.h>
+#include <algorithm>
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 #include "InputSystem.h"
@@ -40,13 +41,16 @@ void AppWindow::updateQuadPosition()
 
 	m_delta_scale += m_delta_time / 0.55f;
 
-	//cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5, 0.5, 0), Vector3D(1.0f, 1.0f, 0), (sin(m_delta_scale) + 1.0f) / 2.0f));
+	if (m_scale_cube != m_new_scale_cube) {
+		float add = m_scale_cube > m_new_scale_cube ? -m_delta_time : m_delta_time;
 
-	//temp.setTranslation(Vector3D::lerp(Vector3D(-1.5f, -1.5f, 0), Vector3D(1.5f,1.5f, 0), m_delta_pos));
+		m_scale_cube += add;
 
-	//cc.m_world *= temp;
+		if (std::abs(m_scale_cube - m_new_scale_cube) < 0.01)
+			m_scale_cube = m_new_scale_cube;
+	}
 
-	cc.m_world.setScale(Vector3D(1, 1, 1));
+	cc.m_world.setScale(Vector3D(m_scale_cube, m_scale_cube, m_scale_cube));
 
 	temp.setIdentity();
 	temp.setRotationZ(0);
@@ -223,6 +227,16 @@ void AppWindow::onDestroy()
 	GraphicsEngine::get()->release();
 }
 
+void AppWindow::onFocus()
+{
+	InputSystem::get()->addListner(this);
+}
+
+void AppWindow::onKillFocus()
+{
+	InputSystem::get()->removeListner(this);
+}
+
 void AppWindow::onKeyDown(int key)
 {
 	if (key == 'W') {
@@ -241,4 +255,30 @@ void AppWindow::onKeyDown(int key)
 
 void AppWindow::onKeyUp(int key)
 {
+}
+
+void AppWindow::onMouseMove(const Point& delta_mouse_pos)
+{
+	m_rot_x -= delta_mouse_pos.m_y * m_delta_time;
+	m_rot_y -= delta_mouse_pos.m_x * m_delta_time;
+}
+
+void AppWindow::onLeftMouseDown(const Point& mouse_pos)
+{
+	m_new_scale_cube = 0.5f;
+}
+
+void AppWindow::onLeftMouseUp(const Point& mouse_pos)
+{
+	m_new_scale_cube = 1.0f;
+}
+
+void AppWindow::onRightMouseDown(const Point& mouse_pos)
+{
+	m_new_scale_cube = 2.0f;
+}
+
+void AppWindow::onRightMouseUp(const Point& mouse_pos)
+{
+	m_new_scale_cube = 1.0f;
 }
