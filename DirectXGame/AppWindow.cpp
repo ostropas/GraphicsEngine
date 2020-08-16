@@ -78,7 +78,13 @@ void AppWindow::update()
 	temp.setRotationY(m_rot_y);
 	world_cam *= temp;
 
-	world_cam.setTranslation(Vector3D(0, 0, -2));
+
+	Vector3D new_pos = m_world_cam.getTranslation() + world_cam.getZDirection() * (m_forward * 0.3f);
+
+
+	world_cam.setTranslation(new_pos);
+
+	m_world_cam = world_cam;
 
 	world_cam.inverse();
 
@@ -125,6 +131,8 @@ void AppWindow::onCreate()
 
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain->init(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
+
+	m_world_cam.setTranslation(Vector3D(0, 0, -2.0f));
 
 	vertex vertex_list[] =
 	{
@@ -271,10 +279,12 @@ void AppWindow::onKillFocus()
 void AppWindow::onKeyDown(int key)
 {
 	if (key == 'W') {
-		m_rot_x += 3 * m_delta_time;
+		m_forward = 1.0f;
+		//m_rot_x += 3 * m_delta_time;
 	}
 	else if (key == 'S') {
-		m_rot_x -= 3 * m_delta_time;
+		m_forward = -1.0f;
+		//m_rot_x -= 3 * m_delta_time;
 	}
 	else if (key == 'A') {
 		m_rot_y += 3 * m_delta_time;
@@ -286,12 +296,13 @@ void AppWindow::onKeyDown(int key)
 
 void AppWindow::onKeyUp(int key)
 {
+	m_forward = 0.0f;
 }
 
 void AppWindow::onMouseMove(const Point& delta_mouse_pos)
 {
-	m_rot_x -= delta_mouse_pos.m_y * m_delta_time * 0.1f;
-	m_rot_y -= delta_mouse_pos.m_x * m_delta_time * 0.1f;
+	m_rot_x += delta_mouse_pos.m_y * m_delta_time * 0.1f;
+	m_rot_y += delta_mouse_pos.m_x * m_delta_time * 0.1f;
 }
 
 void AppWindow::onLeftMouseDown(const Point& mouse_pos)

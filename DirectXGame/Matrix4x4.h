@@ -122,6 +122,18 @@ public:
 		::memcpy(m_mat, matrix.m_mat, sizeof(float) * 16);
 	}
 
+	Vector3D getZDirection() {
+		return Vector3D(m_mat[2][0], m_mat[2][1], m_mat[2][2]);
+	}
+
+	Vector3D getXDirection() {
+		return Vector3D(m_mat[0][0], m_mat[0][1], m_mat[0][2]);
+	}
+	
+	Vector3D getTranslation() {
+		return Vector3D(m_mat[3][0], m_mat[3][1], m_mat[3][2]);
+	}
+
 	void setPerspectiveFovLH(float fov, float aspect, float znear, float zfar)
 	{
 		float yscale = 1.0f / tan(fov / 2.0f);
