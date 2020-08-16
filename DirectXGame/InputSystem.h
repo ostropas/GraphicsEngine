@@ -2,6 +2,7 @@
 #include "InputListner.h" 
 #include <map>
 #include "Point.h"
+#include "Gamepad.h"
 
 class InputSystem
 {
@@ -19,6 +20,8 @@ public:
 public:
 	static InputSystem* get();
 private:
+	Gamepad* m_gamepad;
+
 	std::map<InputListner*, InputListner*> m_map_listners;
 	unsigned char m_keys_state[256] = {};
 	unsigned char m_old_keys_state[256] = {};

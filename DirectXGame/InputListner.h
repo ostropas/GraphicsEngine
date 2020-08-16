@@ -1,5 +1,6 @@
 #pragma once
 #include "Point.h"
+#include <Windows.h>
 
 class InputListner {
 public:
@@ -22,4 +23,9 @@ public:
 	virtual void onLeftMouseUp(const Point& mouse_pos) = 0;
 	virtual void onRightMouseDown(const Point& mouse_pos) = 0;
 	virtual void onRightMouseUp(const Point& mouse_pos) = 0;
+
+	//Gamepad pure virtual callback function
+	virtual void onGamepadKeyDown(WORD key) = 0;
+	virtual void onLeftStickMove(const Point& stick_pos) = 0;
+	virtual void onRightStickMove(const Point& stick_pos) = 0;
 };

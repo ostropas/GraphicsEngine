@@ -1,8 +1,10 @@
 #include "InputSystem.h"
 #include <Windows.h>
+#include <Xinput.h>
 
 InputSystem::InputSystem()
 {
+	m_gamepad = new Gamepad();
 }
 
 InputSystem::~InputSystem()
@@ -80,6 +82,32 @@ void InputSystem::update()
 
 		// store current keys state to old state buffer
 		::memcpy(m_old_keys_state, m_keys_state, sizeof(unsigned char) * 256);
+	}
+
+	if (m_gamepad->Refresh()) {
+		std::map<InputListner*, InputListner*>::iterator it = m_map_listners.begin();
+		while (it != m_map_listners.end()) {
+
+			if (abs(m_gamepad->leftStickX) > 0.1f || abs(m_gamepad->leftStickY) > 0.1f) {
+				it->second->onLeftStickMove(Point(100 * m_gamepad->leftStickX, 100 * m_gamepad->leftStickY));
+			}
+
+			if (abs(m_gamepad->rightStickX) > 0.1f || abs(m_gamepad->rightStickY) > 0.1) {
+				it->second->onRightStickMove(Point(100 * m_gamepad->rightStickX, 100 * m_gamepad->rightStickY));
+			}
+
+			//for(WORD i = 0;  i <= 0x8000; i*=2)
+			//{
+			//	if (m_gamepad->IsPressed(i)) {
+			//		it->second->onGamepadKeyDown(i);
+			//	}
+
+			//	if (i == 0)
+			//		i = 1;
+			//}
+
+			++it;
+		}
 	}
 }
 
