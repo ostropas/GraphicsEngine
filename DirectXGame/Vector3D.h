@@ -32,6 +32,11 @@ public:
 		return Vector3D(m_x + vec.m_x, m_y + vec.m_y, m_z + vec.m_z);
 	}
 
+	Vector3D& operator +=(const Vector3D& rhs) {
+		(*this) = (*this) + rhs;
+		return *this;
+	}
+
 	~Vector3D() {
 
 	}
