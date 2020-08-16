@@ -9,6 +9,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "InputListner.h"
+#include "Matrix4x4.h"
 
 class AppWindow : public Window, public InputListner
 {
@@ -56,4 +57,9 @@ private:
 
 	float m_scale_cube = 1.0f;
 	float m_new_scale_cube = 1.0f;
+
+	float m_forward = 0.0f;
+	float m_rightward = 0.0f;
+
+	Matrix4x4 m_world_cam;
 };
