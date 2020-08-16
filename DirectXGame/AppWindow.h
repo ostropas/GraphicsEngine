@@ -36,6 +36,11 @@ public:
 	virtual void onLeftMouseUp(const Point& mouse_pos) override;
 	virtual void onRightMouseDown(const Point& mouse_pos) override;
 	virtual void onRightMouseUp(const Point& mouse_pos) override;
+
+	// Унаследовано через InputListner
+	virtual void onGamepadKeyDown(WORD key) override;
+	virtual void onLeftStickMove(const Point& stick_pos) override;
+	virtual void onRightStickMove(const Point& stick_pos) override;
 private:
 	SwapChain* m_swap_chain;
 	VertexBuffer* m_vb;

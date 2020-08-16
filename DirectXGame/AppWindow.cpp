@@ -1,9 +1,11 @@
 #include "AppWindow.h"
 #include <Windows.h>
 #include <algorithm>
+#include <Xinput.h>
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 #include "InputSystem.h"
+#include <iostream>
 
 struct vertex
 {
@@ -342,4 +344,26 @@ void AppWindow::onRightMouseDown(const Point& mouse_pos)
 void AppWindow::onRightMouseUp(const Point& mouse_pos)
 {
 	m_new_scale_cube = 1.0f;
+}
+
+void AppWindow::onGamepadKeyDown(WORD key)
+{
+}
+
+void AppWindow::onLeftStickMove(const Point& stick_pos)
+{
+	m_forward = (float)stick_pos.m_y / 100;
+	m_rightward = (float)stick_pos.m_x / 100;
+
+	if (abs(m_forward) <= 0.5f)
+		m_forward = 0.0f;
+
+	if (abs(m_rightward) <= 0.5f)
+		m_rightward = 0.0f;
+
+	std::cout << m_forward << " " << m_rightward << std::endl;
+}	
+
+void AppWindow::onRightStickMove(const Point& stick_pos)
+{
 }
