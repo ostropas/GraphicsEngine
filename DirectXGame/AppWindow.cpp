@@ -282,9 +282,9 @@ void AppWindow::onKeyDown(int key)
 	else if (key == 'D') {
 		m_rightward = 1.0f;
 	}
-	else if (key == 27) { // Esc pressed
-		release();
-	}
+	//else if (key == 27) { // Esc pressed
+	//	::CloseHandle(m_hwnd);
+	//}
 }
 
 void AppWindow::onKeyUp(int key)

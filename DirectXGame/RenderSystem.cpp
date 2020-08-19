@@ -75,7 +75,13 @@ RenderSystem::~RenderSystem()
 
 SwapChain* RenderSystem::createSwapChain(HWND hwnd, UINT width, UINT height)
 {
-	return new SwapChain(hwnd, width, height, this);
+	SwapChain* sc = nullptr;
+	try
+	{
+		sc = new SwapChain(hwnd, width, height, this);
+	}
+	catch (...) {}
+	return sc;
 }
 
 DeviceContext* RenderSystem::getImmediateDeviceContext()
@@ -85,30 +91,56 @@ DeviceContext* RenderSystem::getImmediateDeviceContext()
 
 VertexBuffer* RenderSystem::createVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader)
 {
-	return new VertexBuffer(list_vertices, size_vertex, size_list, shader_byte_code, size_byte_shader, this);
+	VertexBuffer* vb = nullptr;
+	try 
+	{
+		vb = new VertexBuffer(list_vertices, size_vertex, size_list, shader_byte_code, size_byte_shader, this);
+	}
+	catch ( ... ) {}
+	return vb;
 }
 
 IndexBuffer* RenderSystem::createIndexBuffer(void* list_indices, UINT size_list)
 {
-	return new IndexBuffer(list_indices, size_list, this);
+	IndexBuffer* ib = nullptr;
+	try
+	{
+		ib = new IndexBuffer(list_indices, size_list, this);
+	}
+	catch (...) {}
+	return ib;
 }
 
 ConstantBuffer* RenderSystem::createConstantBuffer(void* buffer, UINT size_buffer)
 {
-	return new ConstantBuffer(buffer, size_buffer, this);
+	ConstantBuffer* cb = nullptr;
+	try
+	{
+		cb = new ConstantBuffer(buffer, size_buffer, this);
+	}
+	catch (...) {}
+	return cb;
 }
 
 VertexShader* RenderSystem::createVertexShader(void* shader_byte_code, size_t byte_code_size)
 {
-	VertexShader* vs = new VertexShader(shader_byte_code, byte_code_size, this);
-
+	VertexShader* vs = nullptr;
+	try
+	{
+		vs = new VertexShader(shader_byte_code, byte_code_size, this);
+	}
+	catch (...) {}
 	return vs;
 }
 
 PixelShader* RenderSystem::createPixelShader(void* shader_byte_code, size_t byte_code_size)
 {
-	PixelShader* ps = new PixelShader(shader_byte_code, byte_code_size, this);
-
+	PixelShader* ps = nullptr;
+	try
+	{
+		ps = new PixelShader(shader_byte_code, byte_code_size, this);
+	}
+	catch (...) {}
 	return ps;
 }
 
