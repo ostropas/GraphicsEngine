@@ -150,6 +150,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PingPongValue.cpp" />
     <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
@@ -168,6 +169,8 @@
     <ClInclude Include="PingPongValue.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="Prerequisistes.h" />
+    <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="Vector3D.h" />
     <ClInclude Include="Vector4D.h" />

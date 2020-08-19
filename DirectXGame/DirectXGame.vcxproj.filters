@@ -13,35 +13,38 @@
     <Filter Include="GameEngine\GraphicsEngine">
       <UniqueIdentifier>{d4a3ba87-fc60-48a9-af80-a8bf1304d182}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\SwapChain">
-      <UniqueIdentifier>{0a88352d-16eb-4141-b4d8-15cd77357224}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\DeviceContext">
-      <UniqueIdentifier>{d13649a8-c143-4031-991d-1731783d568c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\Utils">
-      <UniqueIdentifier>{a2e2ed8d-ce5f-435d-95d8-0202910c4329}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\VertexBuffer">
-      <UniqueIdentifier>{ac841ce0-c2fc-4b35-9668-9487dce24557}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\VertexShader">
-      <UniqueIdentifier>{96deda1e-8ba2-4bbc-a6b1-fe356b56d40a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\PixelShader">
-      <UniqueIdentifier>{c995dbcf-4223-4f6c-9b8f-03763922c2f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\ConstantBuffer">
-      <UniqueIdentifier>{487161a7-79ac-4efa-a27d-137e8397eb34}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\Math">
       <UniqueIdentifier>{1cd3e7b4-df1a-4355-b682-54938fc74d92}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\IndexBuffer">
-      <UniqueIdentifier>{cd98c1bb-1a05-4388-b7e0-fc51d7592f85}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\InputSystem">
       <UniqueIdentifier>{871ca8e9-4f3c-46bf-a7b3-88830fb64999}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem">
+      <UniqueIdentifier>{1b6b539c-46c9-4f37-952e-a6177988409d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer">
+      <UniqueIdentifier>{487161a7-79ac-4efa-a27d-137e8397eb34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\DeviceContext">
+      <UniqueIdentifier>{d13649a8-c143-4031-991d-1731783d568c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\IndexBuffer">
+      <UniqueIdentifier>{cd98c1bb-1a05-4388-b7e0-fc51d7592f85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\PixelShader">
+      <UniqueIdentifier>{c995dbcf-4223-4f6c-9b8f-03763922c2f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\SwapChain">
+      <UniqueIdentifier>{0a88352d-16eb-4141-b4d8-15cd77357224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\VertexBuffer">
+      <UniqueIdentifier>{ac841ce0-c2fc-4b35-9668-9487dce24557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\VertexShader">
+      <UniqueIdentifier>{96deda1e-8ba2-4bbc-a6b1-fe356b56d40a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Utils">
+      <UniqueIdentifier>{a2e2ed8d-ce5f-435d-95d8-0202910c4329}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -58,34 +61,37 @@
       <Filter>GameEngine\GraphicsEngine</Filter>
     </ClCompile>
     <ClCompile Include="SwapChain.cpp">
-      <Filter>GameEngine\GraphicsEngine\SwapChain</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\SwapChain</Filter>
     </ClCompile>
     <ClCompile Include="DeviceContext.cpp">
-      <Filter>GameEngine\GraphicsEngine\DeviceContext</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\DeviceContext</Filter>
     </ClCompile>
     <ClCompile Include="PingPongValue.cpp">
-      <Filter>GameEngine\GraphicsEngine\Utils</Filter>
+      <Filter>GameEngine\Utils</Filter>
     </ClCompile>
     <ClCompile Include="VertexBuffer.cpp">
-      <Filter>GameEngine\GraphicsEngine\VertexBuffer</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
     </ClCompile>
     <ClCompile Include="VertexShader.cpp">
-      <Filter>GameEngine\GraphicsEngine\VertexShader</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexShader</Filter>
     </ClCompile>
     <ClCompile Include="PixelShader.cpp">
-      <Filter>GameEngine\GraphicsEngine\PixelShader</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\PixelShader</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>GameEngine\GraphicsEngine\ConstantBuffer</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
     </ClCompile>
     <ClCompile Include="IndexBuffer.cpp">
-      <Filter>GameEngine\GraphicsEngine\IndexBuffer</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\IndexBuffer</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem.cpp">
       <Filter>GameEngine\InputSystem</Filter>
     </ClCompile>
     <ClCompile Include="Gamepad.cpp">
       <Filter>GameEngine\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -99,25 +105,25 @@
       <Filter>GameEngine\GraphicsEngine</Filter>
     </ClInclude>
     <ClInclude Include="SwapChain.h">
-      <Filter>GameEngine\GraphicsEngine\SwapChain</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\SwapChain</Filter>
     </ClInclude>
     <ClInclude Include="DeviceContext.h">
-      <Filter>GameEngine\GraphicsEngine\DeviceContext</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\DeviceContext</Filter>
     </ClInclude>
     <ClInclude Include="PingPongValue.h">
-      <Filter>GameEngine\GraphicsEngine\Utils</Filter>
+      <Filter>GameEngine\Utils</Filter>
     </ClInclude>
     <ClInclude Include="VertexBuffer.h">
-      <Filter>GameEngine\GraphicsEngine\VertexBuffer</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="VertexShader.h">
-      <Filter>GameEngine\GraphicsEngine\VertexShader</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexShader</Filter>
     </ClInclude>
     <ClInclude Include="PixelShader.h">
-      <Filter>GameEngine\GraphicsEngine\PixelShader</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\PixelShader</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
-      <Filter>GameEngine\GraphicsEngine\ConstantBuffer</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Vector3D.h">
       <Filter>GameEngine\Math</Filter>
@@ -126,7 +132,7 @@
       <Filter>GameEngine\Math</Filter>
     </ClInclude>
     <ClInclude Include="IndexBuffer.h">
-      <Filter>GameEngine\GraphicsEngine\IndexBuffer</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\IndexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="InputSystem.h">
       <Filter>GameEngine\InputSystem</Filter>
@@ -142,6 +148,12 @@
     </ClInclude>
     <ClInclude Include="Gamepad.h">
       <Filter>GameEngine\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Prerequisistes.h">
+      <Filter>GameEngine\GraphicsEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
