@@ -10,14 +10,14 @@ GraphicsEngine::~GraphicsEngine()
 
 bool GraphicsEngine::init()
 {
-	m_render_system = new RenderSystem();
-	m_render_system->init();
+	try {
+		m_render_system = new RenderSystem();
+	} catch (...) {}
 	return true;
 }
 
 bool GraphicsEngine::release()
 {
-	m_render_system->release();
 	delete m_render_system;
 	return true;
 }
