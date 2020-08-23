@@ -5,11 +5,10 @@
 class RenderSystem
 {
 public:
-	RenderSystem();
 	// Initialize the GraphicsEngine and Directx11 Device
-	bool init();
+	RenderSystem();
+
 	// Release all resources loaded
-	bool release();
 	~RenderSystem();
 
 public:
@@ -26,6 +25,9 @@ public:
 	void releaseCompiledShader();
 private:
 	ID3DBlob* m_blob = nullptr;
+
+	ID3DBlob* m_vsblob = nullptr;
+	ID3D11VertexShader* m_vs = nullptr;
 	ID3DBlob* m_psblob = nullptr;
 	ID3D11PixelShader* m_ps = nullptr;
 private:
