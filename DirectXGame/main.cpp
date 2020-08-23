@@ -3,6 +3,11 @@
 #include <stdlib.h>
 
 int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
+	try {
+		GraphicsEngine::create();
+	}
+	catch (...) { return -1; }
+
 	AppWindow app;
 	if (app.init()) {
 		::ShowWindow(::GetConsoleWindow(), SW_HIDE);
@@ -11,5 +16,8 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
 			app.broadcast();
 		}
 	}
+
+	GraphicsEngine::release();
+
 	return 0;
 }
