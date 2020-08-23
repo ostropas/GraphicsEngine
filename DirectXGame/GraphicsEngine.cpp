@@ -13,6 +13,7 @@ GraphicsEngine::GraphicsEngine()
 
 GraphicsEngine::~GraphicsEngine()
 {
+	GraphicsEngine::m_engine = nullptr;
 	delete m_render_system;
 }
 
