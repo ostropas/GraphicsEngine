@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <Xinput.h>
 #include "Vector3D.h"
+#include "Vector2D.h"
 #include "Matrix4x4.h"
 #include "InputSystem.h"
 #include <iostream>
@@ -10,8 +11,7 @@
 struct vertex
 {
 	Vector3D position;
-	Vector3D color;
-	Vector3D color1;
+	Vector2D textcoord;
 };
 
 
@@ -130,7 +130,7 @@ void AppWindow::onCreate()
 	InputSystem::get()->addListner(this);
 	InputSystem::get()->showCursor(false);
 
-	TexturePtr m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\wood.jpg");
+	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\wood.jpg");
 
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
@@ -138,21 +138,65 @@ void AppWindow::onCreate()
 
 	m_world_cam.setTranslation(Vector3D(0, 0, -2.0f));
 
+	Vector3D position_list[] =
+	{
+		//X - Y - Z
+		//FRONT FACE
+		{Vector3D(-0.5f,-0.5f,-0.5f)},
+		{Vector3D(-0.5f,0.5f,-0.5f)},
+		{ Vector3D(0.5f,0.5f,-0.5f)},
+		{ Vector3D(0.5f,-0.5f,-0.5f)},
+
+		//BACK FACE
+		{ Vector3D(0.5f,-0.5f,0.5f)},
+		{ Vector3D(0.5f,0.5f,0.5f)},
+		{ Vector3D(-0.5f,0.5f,0.5f)},
+		{ Vector3D(-0.5f,-0.5f,0.5f)}
+	};
+
+	Vector2D textcoord_list[] =
+	{
+		{ Vector2D(0.0f, 0.0f) },
+		{ Vector2D(0.0f, 1.0f) },
+		{ Vector2D(1.0f, 0.0f) },
+		{ Vector2D(1.0f, 1.0f) }
+	};
+
+
+
 	vertex vertex_list[] =
 	{
 		//X - Y - Z
 		//FRONT FACE
-		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0),  Vector3D(0.2f,0,0) },
-		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0), Vector3D(0.2f,0.2f,0) },
-		{ Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0),  Vector3D(0.2f,0.2f,0) },
-		{ Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0), Vector3D(0.2f,0,0) },
+		{ position_list[0], textcoord_list[1] },
+		{ position_list[1], textcoord_list[0] },
+		{ position_list[2], textcoord_list[2] },
+		{ position_list[3], textcoord_list[3] },
 
-		//BACK FACE
-		{ Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0), Vector3D(0,0.2f,0) },
-		{ Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1), Vector3D(0,0.2f,0.2f) },
-		{ Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1),  Vector3D(0,0.2f,0.2f) },
-		{ Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0), Vector3D(0,0.2f,0) }
+		{ position_list[4], textcoord_list[1] },
+		{ position_list[5], textcoord_list[0] },
+		{ position_list[6], textcoord_list[2] },
+		{ position_list[7], textcoord_list[3] },
 
+		{ position_list[1], textcoord_list[1] },
+		{ position_list[6], textcoord_list[0] },
+		{ position_list[5], textcoord_list[2] },
+		{ position_list[2], textcoord_list[3] },
+
+		{ position_list[7], textcoord_list[1] },
+		{ position_list[0], textcoord_list[0] },
+		{ position_list[3], textcoord_list[2] },
+		{ position_list[4], textcoord_list[3] },
+
+		{ position_list[3], textcoord_list[1] },
+		{ position_list[2], textcoord_list[0] },
+		{ position_list[5], textcoord_list[2] },
+		{ position_list[4], textcoord_list[3] },
+
+		{ position_list[7], textcoord_list[1] },
+		{ position_list[6], textcoord_list[0] },
+		{ position_list[1], textcoord_list[2] },
+		{ position_list[0], textcoord_list[3] },
 	};
 
 	UINT size_list = ARRAYSIZE(vertex_list);
@@ -167,17 +211,17 @@ void AppWindow::onCreate()
 		4,5,6,
 		6,7,4,
 		//TOP SIDE
-		1,6,5,
-		5,2,1,
+		8,9,10,
+		10,11,8,
 		//BOTTOM SIDE
-		7,0,3,
-		3,4,7,
+		12,13,14,
+		14,15,12,
 		//RIGHT SIDE
-		3,2,5,
-		5,4,3,
+		16,17,18,
+		18,19,16,
 		//LEFT SIDE
-		7,6,1,
-		1,0,7
+		20,21,22,
+		22,23,20
 	};
 
 
@@ -234,6 +278,8 @@ void AppWindow::onUpdate()
 	//SET DEFAULT SHADER IN THE GRAPHICS PIPELINE TO BE ABLE TO DRAW
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_vs);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_ps);
+
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
 
 
 	//SET THE VERTICES OF THE TRIANGLE TO DRAW
