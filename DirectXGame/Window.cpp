@@ -81,7 +81,7 @@ bool Window::broadcast()
 	MSG msg;
 
 	if (!m_is_init) {
-		SetWindowLongPtr(m_hwnd, GWL_USERDATA, (LONG_PTR)this);
+		SetWindowLongPtr(m_hwnd, GWLP_USERDATA, (LONG_PTR)this);
 		this->onCreate();
 		m_is_init = true;
 	}
