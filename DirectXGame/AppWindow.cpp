@@ -22,7 +22,8 @@ struct constant
 	Matrix4x4 m_world;
 	Matrix4x4 m_view;
 	Matrix4x4 m_proj;
-	unsigned int m_time;
+	Vector4D m_light_direction;
+	Vector4D m_camera_position;
 };
 
 
@@ -33,17 +34,22 @@ AppWindow::AppWindow()
 void AppWindow::update()
 {
 	constant cc;
-	cc.m_time = ::GetTickCount();
-
 	m_delta_pos += m_delta_time / 10.0f;
 	if (m_delta_pos > 1.0f)
 		m_delta_pos = 0;
 
 
 	Matrix4x4 temp;
+	Matrix4x4 m_light_rot_matrix;
+	m_light_rot_matrix.setIdentity();
+	m_light_rot_matrix.setRotationY(m_light_rot_y);
 
-	/*
+	m_light_rot_y += 0.707f * m_delta_time;
+
+	cc.m_light_direction = m_light_rot_matrix.getZDirection();
+
 	m_delta_scale += m_delta_time / 0.55f;
+	/*
 
 	if (m_scale_cube != m_new_scale_cube) {
 		float add = m_scale_cube > m_new_scale_cube ? -m_delta_time : m_delta_time;
@@ -82,11 +88,13 @@ void AppWindow::update()
 	world_cam *= temp;
 
 
-	Vector3D new_pos = m_world_cam.getTranslation() + world_cam.getZDirection() * (m_forward * 0.3f);
-	new_pos += world_cam.getXDirection() * (m_rightward * 0.3f);
+	Vector3D new_pos = m_world_cam.getTranslation() + world_cam.getZDirection() * (m_forward * 0.01f);
+	new_pos += world_cam.getXDirection() * (m_rightward * 0.01f);
 
 
 	world_cam.setTranslation(new_pos);
+
+	cc.m_camera_position = new_pos;
 
 	m_world_cam = world_cam;
 
@@ -132,13 +140,13 @@ void AppWindow::onCreate()
 	InputSystem::get()->showCursor(false);
 
 	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\brick.png");
-	m_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj");
+	m_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\statue.obj");
 
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
 
 
-	m_world_cam.setTranslation(Vector3D(0, 0, -2.0f));
+	m_world_cam.setTranslation(Vector3D(0, 0, -1.0f));
 
 	Vector3D position_list[] =
 	{
@@ -248,7 +256,6 @@ void AppWindow::onCreate()
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
 	constant cc;
-	cc.m_time = 0;
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 }

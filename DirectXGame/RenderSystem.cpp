@@ -134,6 +134,9 @@ bool RenderSystem::compileVertexShader(const wchar_t* file_name, const char* ent
 {
 	ID3DBlob* error_blob = nullptr;
 	if (!SUCCEEDED(D3DCompileFromFile(file_name, nullptr, nullptr, entry_point_name, "vs_5_0", 0, 0, &m_blob, &error_blob))) {
+		char* errMsg = static_cast<char*>(error_blob->GetBufferPointer());
+		errMsg[error_blob->GetBufferSize() - 1] = '\0';
+		MessageBoxA(NULL, errMsg, "Vertex shader compilation failed", MB_OK | MB_ICONERROR);
 		if (error_blob) error_blob->Release();
 		return false;
 	}
@@ -148,6 +151,9 @@ bool RenderSystem::compilePixelShader(const wchar_t* file_name, const char* entr
 {
 	ID3DBlob* error_blob = nullptr;
 	if (!SUCCEEDED(D3DCompileFromFile(file_name, nullptr, nullptr, entry_point_name, "ps_5_0", 0, 0, &m_blob, &error_blob))) {
+		char* errMsg = static_cast<char*>(error_blob->GetBufferPointer());
+		errMsg[error_blob->GetBufferSize() - 1] = '\0';
+		MessageBoxA(NULL, errMsg, "Pixel compilation failed", MB_OK | MB_ICONERROR);
 		if (error_blob) error_blob->Release();
 		return false;
 	}
