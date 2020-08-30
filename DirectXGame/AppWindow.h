@@ -15,9 +15,6 @@ class AppWindow : public Window, public InputListner
 {
 public:
 	AppWindow();
-
-	void update();
-
 	~AppWindow();
 
 	// Inherited via Window
@@ -41,15 +38,25 @@ public:
 	virtual void onGamepadKeyDown(WORD key) override;
 	virtual void onLeftStickMove(const Point& stick_pos) override;
 	virtual void onRightStickMove(const Point& stick_pos) override;
+public:
+	void update();
+	void updateCamera();
+	void updateModel();
+	void updateSkyBox();
+
+	void drawMesh(const MeshPtr& mesh, const VertexShaderPtr& vs, const PixelShaderPtr& ps, const ConstantBufferPtr& cb,
+		const TexturePtr& tex);
 private:
 	SwapChainPtr m_swap_chain;
-	VertexBufferPtr m_vb;
 	VertexShaderPtr m_vs;
 	PixelShaderPtr m_ps;
+	PixelShaderPtr m_sky_ps;
 	ConstantBufferPtr m_cb;
-	IndexBufferPtr m_ib;
+	ConstantBufferPtr m_sky_cb;
 	TexturePtr m_wood_tex;
+	TexturePtr m_sky_tex;
 	MeshPtr m_mesh;
+	MeshPtr m_sky_mesh;
 private:
 	long m_old_delta;
 	long m_new_delta;
@@ -71,4 +78,6 @@ private:
 	float m_rightward = 0.0f;
 
 	Matrix4x4 m_world_cam;
+	Matrix4x4 m_view_cam;
+	Matrix4x4 m_proj_cam;
 };
