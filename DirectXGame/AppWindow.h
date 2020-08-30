@@ -23,6 +23,7 @@ public:
 	virtual void onDestroy() override;
 	virtual void onFocus() override;
 	virtual void onKillFocus() override;
+	virtual void onSize() override;
 
 	// Унаследовано через InputListner
 	virtual void onKeyDown(int key) override;
@@ -39,6 +40,7 @@ public:
 	virtual void onLeftStickMove(const Point& stick_pos) override;
 	virtual void onRightStickMove(const Point& stick_pos) override;
 public:
+	void render();
 	void update();
 	void updateCamera();
 	void updateModel();
@@ -46,6 +48,8 @@ public:
 
 	void drawMesh(const MeshPtr& mesh, const VertexShaderPtr& vs, const PixelShaderPtr& ps, const ConstantBufferPtr& cb,
 		const TexturePtr& tex);
+private:
+	void resetMousePosition();
 private:
 	SwapChainPtr m_swap_chain;
 	VertexShaderPtr m_vs;
@@ -80,4 +84,7 @@ private:
 	Matrix4x4 m_world_cam;
 	Matrix4x4 m_view_cam;
 	Matrix4x4 m_proj_cam;
+
+	bool m_play_state = false;
+	bool m_fullscreen_state = false;
 };
