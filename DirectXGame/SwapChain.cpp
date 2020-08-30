@@ -18,6 +18,7 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 	desc.OutputWindow = hwnd;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
+	desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	desc.Windowed = TRUE;
 
 	HRESULT res = m_system->m_dxgi_factory->CreateSwapChain(device, &desc, &m_swap_chain);
@@ -25,8 +26,41 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 	if (FAILED(res))
 		throw std::exception("SwapChain not created successfuly");
 
+	reloadBuffers(width, height);
+}
+
+void SwapChain::resize(UINT width, UINT height)
+{
+	if (m_rtv) m_rtv->Release();
+	if (m_dsv) m_dsv->Release();
+
+	m_swap_chain->ResizeBuffers(1, width, height, DXGI_FORMAT_B8G8R8A8_UNORM, 0);
+	reloadBuffers(width, height);
+}
+
+void SwapChain::setFullScreen(bool fullscreen, UINT width, UINT height)
+{
+	resize(width, height);
+	m_swap_chain->SetFullscreenState(fullscreen, nullptr);
+}
+
+bool SwapChain::present(bool vsync)
+{
+	m_swap_chain->Present(vsync, NULL);
+	return true;
+}
+
+SwapChain::~SwapChain()
+{
+	m_swap_chain->Release();
+}
+
+void SwapChain::reloadBuffers(UINT width, UINT height)
+{
+	ID3D11Device* device = m_system->m_d3d_device;
+
 	ID3D11Texture2D* buffer = nullptr;
-	res = m_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
+	HRESULT res = m_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
 
 	if (FAILED(res))
 		throw std::exception("SwapChain not created successfuly");
@@ -35,7 +69,7 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 	buffer->Release();
 
 	if (FAILED(res))
-		throw std::exception("SwapChain not created successfuly");
+		throw std::exception("SwapChain not reload buffers successfuly");
 
 	D3D11_TEXTURE2D_DESC tex_depth = {};
 	tex_depth.Width = width;
@@ -53,24 +87,11 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 	res = device->CreateTexture2D(&tex_depth, nullptr, &buffer);
 
 	if (FAILED(res))
-		throw std::exception("SwapChain not created successfuly");
+		throw std::exception("SwapChain not reload buffers successfuly");
 
 	res = device->CreateDepthStencilView(buffer, NULL, &m_dsv);
 	buffer->Release();
 
 	if (FAILED(res))
-		throw std::exception("SwapChain not created successfuly");
-
-
-}
-
-bool SwapChain::present(bool vsync)
-{
-	m_swap_chain->Present(vsync, NULL);
-	return true;
-}
-
-SwapChain::~SwapChain()
-{
-	m_swap_chain->Release();
+		throw std::exception("SwapChain not reload buffers successfuly");
 }

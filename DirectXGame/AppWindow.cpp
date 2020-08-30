@@ -31,6 +31,34 @@ AppWindow::AppWindow()
 {
 }
 
+void AppWindow::render()
+{
+	//CLEAR THE RENDER TARGET 
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
+		0, 0.3f, 0.4f, 1);
+	//SET VIEWPORT OF RENDER TARGET IN WHICH WE HAVE TO DRAW
+	RECT rc = this->getClientWindowRect();
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
+
+	update();
+
+	GraphicsEngine::get()->getRenderSystem()->setRasterizerState(false);
+	drawMesh(m_mesh, m_vs, m_ps, m_cb, m_wood_tex);
+	
+	GraphicsEngine::get()->getRenderSystem()->setRasterizerState(true);
+	drawMesh(m_sky_mesh, m_vs, m_sky_ps, m_sky_cb, m_sky_tex);
+
+
+	m_swap_chain->present(true);
+
+
+	m_old_delta = m_new_delta;
+	m_new_delta = ::GetTickCount();
+
+	m_delta_time = (m_old_delta) ? ((m_new_delta - m_old_delta) / 1000.0f) : 0;
+
+}
+
 void AppWindow::update()
 {
 	updateCamera();
@@ -131,6 +159,14 @@ void AppWindow::drawMesh(const MeshPtr& mesh, const VertexShaderPtr& vs, const P
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
 }
 
+void AppWindow::resetMousePosition()
+{
+	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
+	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
+
+	InputSystem::get()->setCursorPosition(Point(width / 2, height / 2));
+}
+
 
 AppWindow::~AppWindow()
 {
@@ -141,7 +177,10 @@ void AppWindow::onCreate()
 	Window::onCreate();
 
 	InputSystem::get()->addListner(this);
-	InputSystem::get()->showCursor(false);
+
+	m_play_state = true;
+	this->resetMousePosition();
+	InputSystem::get()->showCursor(!m_play_state);
 
 	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\brick.png");
 	m_sky_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\sky.jpg");
@@ -179,40 +218,14 @@ void AppWindow::onCreate()
 void AppWindow::onUpdate()
 {
 	Window::onUpdate();
-
 	InputSystem::get()->update();
-
-	//CLEAR THE RENDER TARGET 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
-		0, 0.3f, 0.4f, 1);
-	//SET VIEWPORT OF RENDER TARGET IN WHICH WE HAVE TO DRAW
-	RECT rc = this->getClientWindowRect();
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
-
-
-
-
-	update();
-
-	GraphicsEngine::get()->getRenderSystem()->setRasterizerState(false);
-	drawMesh(m_mesh, m_vs, m_ps, m_cb, m_wood_tex);
-	
-	GraphicsEngine::get()->getRenderSystem()->setRasterizerState(true);
-	drawMesh(m_sky_mesh, m_vs, m_sky_ps, m_sky_cb, m_sky_tex);
-
-
-	m_swap_chain->present(true);
-
-
-	m_old_delta = m_new_delta;
-	m_new_delta = ::GetTickCount();
-
-	m_delta_time = (m_old_delta) ? ((m_new_delta - m_old_delta) / 1000.0f) : 0;
+	this->render();
 }
 
 void AppWindow::onDestroy()
 {
 	Window::onDestroy();
+	m_swap_chain->setFullScreen(false, 1, 1);
 }
 
 void AppWindow::onFocus()
@@ -223,6 +236,13 @@ void AppWindow::onFocus()
 void AppWindow::onKillFocus()
 {
 	InputSystem::get()->removeListner(this);
+}
+
+void AppWindow::onSize()
+{
+	RECT rc = this->getClientWindowRect();
+	m_swap_chain->resize(rc.right - rc.left, rc.bottom - rc.top);
+	this->render();
 }
 
 void AppWindow::onKeyDown(int key)
@@ -246,22 +266,25 @@ void AppWindow::onKeyDown(int key)
 
 void AppWindow::onKeyUp(int key)
 {
-	if (key == 'W') {
-		m_forward = 0.0f;
+	m_forward = 0.0f;
+	m_rightward = 0.0f;
+
+	if (key == 'G') {
+		m_play_state = !m_play_state;
+		InputSystem::get()->showCursor(!m_play_state);
+		this->resetMousePosition();
 	}
-	else if (key == 'S') {
-		m_forward = 0.0f;
-	}
-	else if (key == 'A') {
-		m_rightward = 0.0f;
-	}
-	else if (key == 'D') {
-		m_rightward = 0.0f;
+	else if (key == 'F') {
+		m_fullscreen_state = !m_fullscreen_state;
+		RECT rc = this->getScreenSize();
+		m_swap_chain->setFullScreen(m_fullscreen_state, rc.right, rc.bottom);
 	}
 }
 
 void AppWindow::onMouseMove(const Point& mouse_pos)
 {
+	if (!m_play_state) return;
+
 	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
 	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
 
