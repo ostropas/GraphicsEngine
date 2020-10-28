@@ -23,7 +23,7 @@ cbuffer constant: register(b0)
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
-	float4 tex_col = TextureColor.Sample(TextureColorSampler, (1.0 - input.texcoord)*2.0);
+	float4 tex_col = TextureColor.Sample(TextureColorSampler, (1.0 - input.texcoord));
 
 	//Ambient light
 	float ka = 1.5;
