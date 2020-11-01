@@ -81,7 +81,7 @@ Mesh::~Mesh()
 {
 }
 
-const VertexBufferPtr& Mesh::getVertexVuffer()
+const VertexBufferPtr& Mesh::getVertexBuffer()
 {
 	return m_vertex_buffer;
 }

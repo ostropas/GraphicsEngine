@@ -8,7 +8,7 @@ class Mesh : public Resource
 public:
 	Mesh(const wchar_t* full_path);
 	~Mesh();
-	const VertexBufferPtr& getVertexVuffer();
+	const VertexBufferPtr& getVertexBuffer();
 	const IndexBufferPtr& getIndexBuffer();
 private:
 	VertexBufferPtr m_vertex_buffer;
