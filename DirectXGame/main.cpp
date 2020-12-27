@@ -1,6 +1,4 @@
-#include "AppWindow.h"
-#include <wchar.h>
-#include <stdlib.h>
+#include "SpaceShooterGame.h"
 #include "InputSystem.h"
 
 int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
@@ -12,7 +10,7 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
 
 	::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 	try {
-		AppWindow app;
+		SpaceShooterGame app;
 		while (app.isRun());
 	}
 	catch (...) {
