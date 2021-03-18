@@ -338,3 +338,4 @@ ASALocalRun/
 healthchecksdb
 
 !DirectXGame/Assets
+DirectXGame/cmake-build-debug
