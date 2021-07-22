@@ -283,7 +283,7 @@ void AppWindow::onCreate()
 	m_terrain_mat->addTexture(m_sand_tex);
 	m_terrain_mat->setCullMode(CULL_MODE_BACK);
 
-	m_sky_mat = GraphicsEngine::get()->createMaterial(L"PointLightVertexShader.hlsl", L"SkyBoxShader.hlsl");
+	m_sky_mat = GraphicsEngine::get()->createMaterial(L"SkyBoxVertexShader.hlsl", L"SkyBoxPixelShader.hlsl");
 	m_sky_mat->addTexture(m_sky_tex);
 	m_sky_mat->setCullMode(CULL_MODE_FRONT);
 
