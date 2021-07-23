@@ -82,6 +82,9 @@
     <Filter Include="App\GlobalShaders\PointLight">
       <UniqueIdentifier>{bc29b295-36d4-43f5-9d4e-e88960b0a1af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="App\BumpMappingDemo">
+      <UniqueIdentifier>{96f97d8e-d2b3-4b3c-9060-2a70df85b1f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -152,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="SpaceShooterGame.cpp">
       <Filter>App\SpaceShooterGame</Filter>
+    </ClCompile>
+    <ClCompile Include="BumpMappingDemo.cpp">
+      <Filter>App\BumpMappingDemo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="MathUtils.h">
       <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="BumpMappingDemo.h">
+      <Filter>App\BumpMappingDemo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

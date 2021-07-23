@@ -1,4 +1,4 @@
-#include "SpaceShooterGame.h"
+#include "BumpMappingDemo.h"
 #include "InputSystem.h"
 
 int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
@@ -10,7 +10,7 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
 
 	::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 	try {
-		SpaceShooterGame app;
+		BumpMappingDemo app;
 		while (app.isRun());
 	}
 	catch (...) {
