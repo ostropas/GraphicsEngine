@@ -73,6 +73,9 @@ private:
 	SwapChainPtr m_swap_chain;
 
 	MeshPtr m_sphere_mesh;
+	TexturePtr m_brick_tex;
+	TexturePtr m_brick_normal_tex;
+	MaterialPtr m_brick_mat;
 
 	TexturePtr m_sky_tex;
 	MeshPtr m_sky_mesh;
