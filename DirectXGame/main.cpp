@@ -1,4 +1,4 @@
-#include "BumpMappingDemo.h"
+#include "FrameBufferDemo.h"
 #include "InputSystem.h"
 
 int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
@@ -10,7 +10,7 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
 
 	::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 	try {
-		BumpMappingDemo app;
+		FrameBufferDemo app;
 		while (app.isRun());
 	}
 	catch (...) {

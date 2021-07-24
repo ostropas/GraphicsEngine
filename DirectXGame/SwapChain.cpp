@@ -71,20 +71,20 @@ void SwapChain::reloadBuffers(UINT width, UINT height)
 	if (FAILED(res))
 		throw std::exception("SwapChain not reload buffers successfuly");
 
-	D3D11_TEXTURE2D_DESC tex_depth = {};
-	tex_depth.Width = width;
-	tex_depth.Height = height;
-	tex_depth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	tex_depth.Usage = D3D11_USAGE_DEFAULT;
-	tex_depth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	tex_depth.MipLevels = 1;
-	tex_depth.SampleDesc.Count = 1;
-	tex_depth.SampleDesc.Quality = 0;
-	tex_depth.MiscFlags = 0;
-	tex_depth.ArraySize = 1;
-	tex_depth.CPUAccessFlags = 0;
+	D3D11_TEXTURE2D_DESC tex_desc = {};
+	tex_desc.Width = width;
+	tex_desc.Height = height;
+	tex_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	tex_desc.Usage = D3D11_USAGE_DEFAULT;
+	tex_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	tex_desc.MipLevels = 1;
+	tex_desc.SampleDesc.Count = 1;
+	tex_desc.SampleDesc.Quality = 0;
+	tex_desc.MiscFlags = 0;
+	tex_desc.ArraySize = 1;
+	tex_desc.CPUAccessFlags = 0;
 
-	res = device->CreateTexture2D(&tex_depth, nullptr, &buffer);
+	res = device->CreateTexture2D(&tex_desc, nullptr, &buffer);
 
 	if (FAILED(res))
 		throw std::exception("SwapChain not reload buffers successfuly");
