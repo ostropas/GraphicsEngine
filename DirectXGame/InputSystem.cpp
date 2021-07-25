@@ -37,54 +37,53 @@ void InputSystem::update()
 	}
 	m_old_mouse_pos = Point(current_mouse_pos.x, current_mouse_pos.y);
 
-	if (::GetKeyboardState(m_keys_state)) {
-		for (unsigned int i = 0;i < 256; i++)
+	for (unsigned int i = 0;i < 256; i++)
+	{
+		m_keys_state[i] = ::GetAsyncKeyState(i);
+		// Key is down
+		if (m_keys_state[i] & 0x8001) {
+			std::map<InputListner*, InputListner*>::iterator it = m_map_listners.begin();
+
+			while (it != m_map_listners.end()) {
+				if (i == VK_LBUTTON) {
+					if (m_keys_state[i] != m_old_keys_state[i]) {
+						it->second->onLeftMouseDown(Point(current_mouse_pos.x, current_mouse_pos.y));
+					}
+				}
+				else if (i == VK_RBUTTON) {
+					if (m_keys_state[i] != m_old_keys_state[i]) {
+						it->second->onRightMouseDown(Point(current_mouse_pos.x, current_mouse_pos.y));
+					}
+				}
+				else
+					it->second->onKeyDown(i);
+				
+
+				++it;
+			}
+		}
+		else // Key is up
 		{
-			// Key is down
-			if (m_keys_state[i] & 0x80) {
+			if (m_keys_state[i] != m_old_keys_state[i]) {
 				std::map<InputListner*, InputListner*>::iterator it = m_map_listners.begin();
 
 				while (it != m_map_listners.end()) {
 					if (i == VK_LBUTTON) {
-						if (m_keys_state[i] != m_old_keys_state[i]) {
-							it->second->onLeftMouseDown(Point(current_mouse_pos.x, current_mouse_pos.y));
-						}
+						it->second->onLeftMouseUp(Point(current_mouse_pos.x, current_mouse_pos.y));
 					}
 					else if (i == VK_RBUTTON) {
-						if (m_keys_state[i] != m_old_keys_state[i]) {
-							it->second->onRightMouseDown(Point(current_mouse_pos.x, current_mouse_pos.y));
-						}
+						it->second->onRightMouseUp(Point(current_mouse_pos.x, current_mouse_pos.y));
 					}
 					else
-						it->second->onKeyDown(i);
-					
+						it->second->onKeyUp(i);
 
 					++it;
-				}
-			}
-			else // Key is up
-			{
-				if (m_keys_state[i] != m_old_keys_state[i]) {
-					std::map<InputListner*, InputListner*>::iterator it = m_map_listners.begin();
-
-					while (it != m_map_listners.end()) {
-						if (i == VK_LBUTTON) {
-							it->second->onLeftMouseUp(Point(current_mouse_pos.x, current_mouse_pos.y));
-						}
-						else if (i == VK_RBUTTON) {
-							it->second->onRightMouseUp(Point(current_mouse_pos.x, current_mouse_pos.y));
-						}
-						else
-							it->second->onKeyUp(i);
-
-						++it;
-					}
 				}
 			}
 		}
 
 		// store current keys state to old state buffer
-		::memcpy(m_old_keys_state, m_keys_state, sizeof(unsigned char) * 256);
+		::memcpy(m_old_keys_state, m_keys_state, sizeof(USHORT) * 256);
 	}
 
 	if (m_gamepad->Refresh()) {

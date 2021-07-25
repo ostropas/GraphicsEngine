@@ -5,6 +5,7 @@
 #include "Vector3D.h"
 #include "Vector2D.h"
 #include <vector>
+#include "VertexMesh.h"
 
 struct MaterialSlot
 {
@@ -17,6 +18,11 @@ class Mesh : public Resource
 {
 public:
 	Mesh(const wchar_t* full_path);
+	Mesh(
+		VertexMesh* vertex_list_data, UINT vertex_list_size,
+		UINT* index_list_data, UINT index_list_size,
+		MaterialSlot* material_slot_list, UINT material_slot_list_size
+	);
 	~Mesh();
 	const VertexBufferPtr& getVertexBuffer();
 	const IndexBufferPtr& getIndexBuffer();

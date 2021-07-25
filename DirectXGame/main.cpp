@@ -1,4 +1,4 @@
-#include "FrameBufferDemo.h"
+#include "PostProcessingDemo.h"
 #include "InputSystem.h"
 
 int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
@@ -10,7 +10,7 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
 
 	::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 	try {
-		FrameBufferDemo app;
+		PostProcessingDemo app;
 		while (app.isRun());
 	}
 	catch (...) {
