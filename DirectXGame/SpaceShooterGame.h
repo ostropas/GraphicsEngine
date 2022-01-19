@@ -54,10 +54,6 @@ private:
 private:
 	SwapChainPtr m_swap_chain;
 
-	TexturePtr m_sky_tex;
-	MeshPtr m_sky_mesh;
-	MaterialPtr m_sky_mat;
-
 	MaterialPtr m_base_mat;
 
 private:
@@ -76,6 +72,7 @@ private:
 
 	float m_spaceship_speed = 125.0f;
 
+	MeshRendererPtr m_sky;
 	MeshRendererPtr m_spaceship;
 	std::vector<MeshRendererPtr> m_asteroids;
 

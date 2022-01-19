@@ -55,11 +55,7 @@ void SpaceShooterGame::render()
 		drawRenderer(asteroid);
 	}
 
-	// Render skybox
-	m_list_materials.clear();
-	m_list_materials.push_back(m_sky_mat);
-	drawMesh(m_sky_mesh, m_list_materials);
-
+	drawRenderer(m_sky);
 
 	m_swap_chain->present(true);
 
@@ -293,15 +289,7 @@ void SpaceShooterGame::updateSpaceship()
 
 void SpaceShooterGame::updateSkyBox()
 {
-	constant cc;
-
-	cc.m_world.setIdentity();
-	cc.m_world.setScale(Vector3D(4000.0f, 4000.0f, 4000.0f));
-	cc.m_world.setTranslation(m_world_cam.getTranslation());
-	cc.m_view = m_view_cam;
-	cc.m_proj = m_proj_cam;
-
-	m_sky_mat->setData(&cc, sizeof(constant));
+	m_sky->GetTransform()->SetPosition(m_spaceship->GetTransform()->GetPosition());
 }
 
 void SpaceShooterGame::drawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr>& list_materials)
@@ -359,18 +347,22 @@ void SpaceShooterGame::onCreate()
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
 
-	srand(static_cast<unsigned>(time(nullptr)));
-	
-
-	m_sky_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\stars_map.jpg");
-	m_sky_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\sphere.obj");
+	srand(static_cast<unsigned>(time(nullptr)));	
 
 	m_base_mat = GraphicsEngine::get()->createMaterial(L"DirectionalLightVertexShader.hlsl", L"DirectionalLightPixelShader.hlsl");
 	m_base_mat->setCullMode(CULL_MODE_BACK);
 
-	m_sky_mat = GraphicsEngine::get()->createMaterial(L"SkyBoxVertexShader.hlsl", L"SkyBoxPixelShader.hlsl");
-	m_sky_mat->addTexture(m_sky_tex);
-	m_sky_mat->setCullMode(CULL_MODE_FRONT);
+	TexturePtr sky_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\stars_map.jpg");
+	MeshPtr sky_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\sphere.obj");
+
+	MaterialPtr sky_mat = GraphicsEngine::get()->createMaterial(L"SkyBoxVertexShader.hlsl", L"SkyBoxPixelShader.hlsl");
+	sky_mat->addTexture(sky_tex);
+	sky_mat->setCullMode(CULL_MODE_FRONT);
+
+	std::vector<MaterialPtr> sky_materials{ sky_mat };
+	Transform skyTransform = Transform();
+	skyTransform.SetScale(Vector3D(4000, 4000, 4000));
+	m_sky = std::make_shared<MeshRenderer>(skyTransform, sky_mesh, sky_materials);
 
 
 	TexturePtr spaceship_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\spaceship.jpg");
