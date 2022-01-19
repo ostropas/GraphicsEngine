@@ -94,7 +94,7 @@ void Transform::CalcMembers()
 {
 	Vector3D globalPos = m_localPos;
 	Vector3D globalRot = m_localRot;
-	Vector3D globalScale = m_scale;
+	Vector3D globalScale = m_localScale;
 	std::shared_ptr<Transform> parentTransform = GetParent();
 	while (parentTransform)
 	{
