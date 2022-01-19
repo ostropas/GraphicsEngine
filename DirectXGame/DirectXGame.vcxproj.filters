@@ -97,6 +97,18 @@
     <Filter Include="App\GlobalShaders\PostProcessEffect">
       <UniqueIdentifier>{304c8a7c-867c-491d-8453-03a43764521e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\Scene">
+      <UniqueIdentifier>{debce841-6896-4326-bb36-9598f1b3e921}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Renderer">
+      <UniqueIdentifier>{9ba3395b-4ce8-4283-9308-bdf24f06473c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Gameplay">
+      <UniqueIdentifier>{d57b3a39-85e2-438b-9f36-49abb81a6a0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Gameplay\Components">
+      <UniqueIdentifier>{7381e2b8-c5ad-4d66-ae09-7a340662b711}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -179,6 +191,24 @@
     </ClCompile>
     <ClCompile Include="PostProcessingDemo.cpp">
       <Filter>App\PostProcessingDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>GameEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderer.cpp">
+      <Filter>GameEngine\GraphicsEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>GameEngine\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameEngine\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="GameplayComponent.cpp">
+      <Filter>GameEngine\Gameplay\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneComponent.cpp">
+      <Filter>GameEngine\Gameplay\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -289,6 +319,27 @@
     </ClInclude>
     <ClInclude Include="PostProcessingDemo.h">
       <Filter>App\PostProcessingDemo</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>GameEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>GameEngine\GraphicsEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>GameEngine\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameEngine\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseComponent.h">
+      <Filter>GameEngine\Gameplay\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayComponent.h">
+      <Filter>GameEngine\Gameplay\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneComponent.h">
+      <Filter>GameEngine\Gameplay\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

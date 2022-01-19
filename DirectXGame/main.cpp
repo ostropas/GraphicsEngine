@@ -1,3 +1,4 @@
+#include "SpaceShooterGame.h"
 #include "PostProcessingDemo.h"
 #include "InputSystem.h"
 
@@ -10,7 +11,7 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]) {
 
 	::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 	try {
-		PostProcessingDemo app;
+		SpaceShooterGame app;
 		while (app.isRun());
 	}
 	catch (...) {

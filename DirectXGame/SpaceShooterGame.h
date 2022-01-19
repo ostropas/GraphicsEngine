@@ -25,7 +25,6 @@ public:
 	virtual void onKillFocus() override;
 	virtual void onSize() override;
 
-	// Унаследовано через InputListner
 	virtual void onKeyDown(int key) override;
 	virtual void onKeyUp(int key) override;
 	virtual void onMouseMove(const Point& delta_mouse_pos) override;
@@ -35,7 +34,6 @@ public:
 	virtual void onRightMouseDown(const Point& mouse_pos) override;
 	virtual void onRightMouseUp(const Point& mouse_pos) override;
 
-	// Унаследовано через InputListner
 	virtual void onGamepadKeyDown(WORD key) override;
 	virtual void onLeftStickMove(const Point& stick_pos) override;
 	virtual void onRightStickMove(const Point& stick_pos) override;
@@ -50,18 +48,11 @@ public:
 	void updateSkyBox();
 
 	void drawMesh(const MeshPtr& mesh, const std::vector<MaterialPtr> & list_materials);
+	void drawRenderer(const MeshRendererPtr& meshRenderer);
 private:
 	void resetMousePosition();
 private:
 	SwapChainPtr m_swap_chain;
-
-	TexturePtr m_spaceship_tex;
-	MeshPtr m_spaceship_mesh;
-	MaterialPtr m_spaceship_mat;
-
-	TexturePtr m_asteroid_tex;
-	MeshPtr m_asteroid_mesh;
-	MaterialPtr m_asteroid_mat;
 
 	TexturePtr m_sky_tex;
 	MeshPtr m_sky_mesh;
@@ -85,18 +76,15 @@ private:
 
 	float m_spaceship_speed = 125.0f;
 
-	Vector3D m_current_spaceship_pos;
+	MeshRendererPtr m_spaceship;
+	std::vector<MeshRendererPtr> m_asteroids;
+
 	Vector3D m_spaceship_pos;
 
-	Vector3D m_current_spaceship_rot;
 	Vector3D m_spaceship_rot;
 
 	float m_delta_mouse_x = 0.0f;
 	float m_delta_mouse_y = 0.0f;
-
-	Vector3D m_asteroids_pos[200];
-	Vector3D m_asteroids_rot[200];
-	Vector3D m_asteroids_scale[200];
 
 	float m_forward = 0.0f;
 	float m_rightward = 0.0f;

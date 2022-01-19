@@ -10,6 +10,7 @@
 #include "Mesh.h"
 #include <time.h>
 #include "MathUtils.h"
+#include "MeshRenderer.h"
 
 struct vertex
 {
@@ -45,20 +46,13 @@ void SpaceShooterGame::render()
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
-
 	// Render spaceship
-	m_list_materials.clear();
-	m_list_materials.push_back(m_spaceship_mat);
-	updateModel(m_current_spaceship_pos,m_current_spaceship_rot,Vector3D(1,1,1), m_list_materials);
-	drawMesh(m_spaceship_mesh, m_list_materials);
+	drawRenderer(m_spaceship);
 
-	// Render asteroids
-	m_list_materials.clear();
-	m_list_materials.push_back(m_asteroid_mat);
-	for (unsigned int i = 0; i < 200; i++)
+
+	for (const auto& asteroid : m_asteroids)
 	{
-		updateModel(m_asteroids_pos[i],m_asteroids_rot[i], m_asteroids_scale[i], m_list_materials);
-		drawMesh(m_asteroid_mesh, m_list_materials);
+		drawRenderer(asteroid);
 	}
 
 	// Render skybox
@@ -172,7 +166,7 @@ void SpaceShooterGame::updateThirdPersonCamera()
 
 	m_current_cam_distance = lerp(m_current_cam_distance, m_cam_distance, 2.0f * m_delta_time);
 
-	m_cam_pos = m_current_spaceship_pos;
+	m_cam_pos = m_spaceship->GetTransform()->GetPosition();
 	
 	Vector3D new_pos = m_cam_pos + world_cam.getZDirection() * (-m_current_cam_distance);
 	new_pos += world_cam.getYDirection() * 5;
@@ -266,15 +260,21 @@ void SpaceShooterGame::updateSpaceship()
 		m_spaceship_rot.m_x = 1.57f;
 	else if (m_spaceship_rot.m_x <= -1.57f)
 		m_spaceship_rot.m_x = -1.57f;
-	
-	m_current_spaceship_rot = Vector3D::lerp(m_current_spaceship_rot, m_spaceship_rot, 5.0f * m_delta_time);
+
+	Transform* spaceshipTransform = m_spaceship->GetTransform();
+
+	Vector3D currentRot = spaceshipTransform->GetRotation();
+		
+	currentRot = Vector3D::lerp(currentRot, m_spaceship_rot, 5.0f * m_delta_time);
+
+	spaceshipTransform->SetRotation(currentRot);
 
 	temp.setIdentity();
-	temp.setRotationX(m_current_spaceship_rot.m_x);
+	temp.setRotationX(currentRot.m_x);
 	world_model *= temp;
 
 	temp.setIdentity();
-	temp.setRotationY(m_current_spaceship_rot.m_y);
+	temp.setRotationY(currentRot.m_y);
 	world_model *= temp;
 
 	m_spaceship_speed = 125.0f;
@@ -284,7 +284,11 @@ void SpaceShooterGame::updateSpaceship()
 
 	m_spaceship_pos = m_spaceship_pos + world_model.getZDirection() * (m_forward) * m_spaceship_speed*m_delta_time;
 
-	m_current_spaceship_pos = Vector3D::lerp(m_current_spaceship_pos, m_spaceship_pos, 3.0f * m_delta_time);
+	Vector3D currentPos = spaceshipTransform->GetPosition();
+
+	currentPos = Vector3D::lerp(currentPos, m_spaceship_pos, 3.0f * m_delta_time);
+
+	spaceshipTransform->SetPosition(currentPos);
 }
 
 void SpaceShooterGame::updateSkyBox()
@@ -320,6 +324,13 @@ void SpaceShooterGame::drawMesh(const MeshPtr& mesh, const std::vector<MaterialP
 	}
 }
 
+void SpaceShooterGame::drawRenderer(const MeshRendererPtr& meshRenderer)
+{
+	auto transform = meshRenderer->GetTransform();
+	updateModel(transform->GetPosition(), transform->GetRotation(), transform->GetScale(), meshRenderer->GetMaterials());
+	drawMesh(meshRenderer->GetMesh(), meshRenderer->GetMaterials());
+}
+
 void SpaceShooterGame::resetMousePosition()
 {
 	RECT win_rect = getClientWindowRect();
@@ -350,22 +361,9 @@ void SpaceShooterGame::onCreate()
 
 	srand(static_cast<unsigned>(time(nullptr)));
 	
-	for (unsigned int i = 0; i < 200; i++)
-	{
-		m_asteroids_pos[i] = Vector3D(rand()%4000 + (-2000), rand() % 4000 + (-2000), rand() % 4000 + (-2000));
-		m_asteroids_rot[i] = Vector3D((rand()%628)/100.0f, (rand() % 628) / 100.0f, (rand() % 628) / 100.0f);
-		const float scale = rand() % 20 + 6;
-		m_asteroids_scale[i] = Vector3D(scale, scale, scale);
-	}
 
 	m_sky_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\stars_map.jpg");
 	m_sky_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\sphere.obj");
-
-	m_spaceship_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\spaceship.jpg");
-	m_spaceship_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\spaceship.obj");
-
-	m_asteroid_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\asteroid.jpg");
-	m_asteroid_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\asteroid.obj");
 
 	m_base_mat = GraphicsEngine::get()->createMaterial(L"DirectionalLightVertexShader.hlsl", L"DirectionalLightPixelShader.hlsl");
 	m_base_mat->setCullMode(CULL_MODE_BACK);
@@ -374,13 +372,40 @@ void SpaceShooterGame::onCreate()
 	m_sky_mat->addTexture(m_sky_tex);
 	m_sky_mat->setCullMode(CULL_MODE_FRONT);
 
-	m_spaceship_mat = GraphicsEngine::get()->createMaterial(m_base_mat);
-	m_spaceship_mat->addTexture(m_spaceship_tex);
-	m_spaceship_mat->setCullMode(CULL_MODE_BACK);
 
-	m_asteroid_mat = GraphicsEngine::get()->createMaterial(m_base_mat);
-	m_asteroid_mat ->addTexture(m_asteroid_tex);
-	m_asteroid_mat ->setCullMode(CULL_MODE_BACK);
+	TexturePtr spaceship_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\spaceship.jpg");
+	MeshPtr spaceship_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\spaceship.obj");
+
+	MaterialPtr spaceship_mat = GraphicsEngine::get()->createMaterial(m_base_mat);
+	spaceship_mat->addTexture(spaceship_tex);
+	spaceship_mat->setCullMode(CULL_MODE_BACK);
+
+	std::vector<MaterialPtr> spaceship_materials { spaceship_mat };
+	m_spaceship = std::make_shared<MeshRenderer>(Transform(), spaceship_mesh, spaceship_materials);
+
+	TexturePtr asteroid_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\asteroid.jpg");
+	MeshPtr asteroid_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\asteroid.obj");
+
+	MaterialPtr asteroid_mat = GraphicsEngine::get()->createMaterial(m_base_mat);
+	asteroid_mat->addTexture(asteroid_tex);
+	asteroid_mat->setCullMode(CULL_MODE_BACK);
+
+	std::vector<MaterialPtr> list_materials{ asteroid_mat };
+
+
+	for (unsigned int i = 0; i < 200; i++)
+	{
+		Transform transform = Transform();
+
+		transform.SetPosition(Vector3D(rand() % 4000 + (-2000), rand() % 4000 + (-2000), rand() % 4000 + (-2000)));
+		transform.SetRotation(Vector3D((rand() % 628) / 100.0f, (rand() % 628) / 100.0f, (rand() % 628) / 100.0f));
+		const float scale = rand() % 20 + 6;
+		transform.SetScale(Vector3D(scale, scale, scale));
+
+		MeshRendererPtr meshRenderer = std::make_shared<MeshRenderer>(transform, asteroid_mesh, list_materials);
+
+		m_asteroids.push_back(meshRenderer);
+	}
 
 	m_world_cam.setTranslation(Vector3D(0, 0, -2));
 
@@ -509,16 +534,6 @@ void SpaceShooterGame::onGamepadKeyDown(WORD key)
 
 void SpaceShooterGame::onLeftStickMove(const Point& stick_pos)
 {
-	m_forward = (float)stick_pos.m_y / 100;
-	m_rightward = (float)stick_pos.m_x / 100;
-
-	if (abs(m_forward) <= 0.5f)
-		m_forward = 0.0f;
-
-	if (abs(m_rightward) <= 0.5f)
-		m_rightward = 0.0f;
-
-	std::cout << m_forward << " " << m_rightward << std::endl;
 }	
 
 void SpaceShooterGame::onRightStickMove(const Point& stick_pos)
