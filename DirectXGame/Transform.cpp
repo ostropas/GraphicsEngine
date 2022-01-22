@@ -8,10 +8,6 @@ Transform::Transform()
 	CalcMembers();
 }
 
-Transform::~Transform()
-{
-	int i = 0;
-}
 
 void Transform::SetPosition(const Vector3D& pos)
 {
@@ -78,6 +74,11 @@ void Transform::SetParent(const std::shared_ptr<Transform>& transform)
 {
 	m_parent = transform;
 	CalcMembers();
+}
+
+void Transform::SetChild(const std::shared_ptr<Transform>& transform)
+{
+	m_childs.push_back(transform);
 }
 
 Vector3D Transform::TransformPoint(const Vector3D& position)

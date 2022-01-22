@@ -53,6 +53,16 @@ public:
 		m_mat[1][1] = cos(z);
 	}
 
+	static Matrix4x4 crateRotationMatrix(const Vector3D& eul)
+	{
+		Matrix4x4 tmp;
+		tmp.setIdentity();
+		tmp.setRotationX(eul.m_x);
+		tmp.setRotationY(eul.m_y);
+		tmp.setRotationZ(eul.m_z);
+		return tmp;
+	}
+
 	void operator *=(const Matrix4x4& matrix) {
 		Matrix4x4 out;
 		for (int i = 0; i < 4; i++)

@@ -1,12 +1,12 @@
 #pragma once
 #include "Vector3D.h";
 #include <memory>
+#include <vector>
 
 class Transform
 {
 public:
 	Transform();
-	~Transform();
 
 	Vector3D GetPosition() const {
 		return m_pos;
@@ -36,7 +36,8 @@ public:
 	}
 	void SetScale(const Vector3D& scale);
 
-	void SetParent(const std::shared_ptr<Transform>& transform);
+	void SetParent(const std::shared_ptr<Transform>& transform);	
+
 	std::shared_ptr<Transform> GetParent() const {
 		return m_parent;
 	}
@@ -44,7 +45,9 @@ public:
 	Vector3D TransformPoint(const Vector3D& position);
 	void Update();
 private:
+	void SetChild(const std::shared_ptr<Transform>& transform);
 	std::shared_ptr<Transform> m_parent;
+	std::vector<std::shared_ptr<Transform>> m_childs;
 	Vector3D m_localPos;
 	Vector3D m_localScale;
 	Vector3D m_localRot;

@@ -63,7 +63,6 @@ void SpaceShooterGame::render()
 	m_old_delta = m_new_delta;
 	m_new_delta = ::GetTickCount();
 
-	//m_delta_time = (m_old_delta) ? ((m_new_delta - m_old_delta) / 1000.0f) : 0;
 	m_delta_time = 1.0f / 60.0f;
 	m_time += m_delta_time;
 }
@@ -246,7 +245,7 @@ void SpaceShooterGame::updateLight()
 
 void SpaceShooterGame::updateSpaceship()
 {
-	Matrix4x4 world_model, temp;
+	Matrix4x4 world_model;
 	world_model.setIdentity();
 
 	m_spaceship_rot.m_x += m_delta_mouse_y * m_delta_time * 0.1f;
@@ -265,13 +264,7 @@ void SpaceShooterGame::updateSpaceship()
 
 	spaceshipTransform->SetRotation(currentRot);
 
-	temp.setIdentity();
-	temp.setRotationX(currentRot.m_x);
-	world_model *= temp;
-
-	temp.setIdentity();
-	temp.setRotationY(currentRot.m_y);
-	world_model *= temp;
+	world_model *= Matrix4x4::crateRotationMatrix(currentRot);
 
 	m_spaceship_speed = 125.0f;
 
