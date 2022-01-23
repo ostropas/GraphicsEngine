@@ -2,7 +2,6 @@
 #include <memory>
 #include "Vector3D.h"
 #include "Vector4D.h"
-#include "MathUtils.h"
 
 
 class Matrix4x4
@@ -48,7 +47,19 @@ public:
 		return Vector3D(vector[0], vector[1], vector[2]);
 	}
 
-	Matrix4x4 extractRotMat() const
+	Matrix4x4 extractScale() const
+	{
+		float sx = Vector3D(m_mat[0][0], m_mat[1][0], m_mat[2][0]).magnitute();
+		float sy = Vector3D(m_mat[0][1], m_mat[1][1], m_mat[2][1]).magnitute();
+		float sz = Vector3D(m_mat[0][2], m_mat[1][2], m_mat[2][2]).magnitute();
+
+		Matrix4x4 tmp;
+		tmp.setIdentity();
+		tmp.setScale(Vector3D(sx, sy, sz));
+		return tmp;
+	}
+
+	Matrix4x4 extractRotation() const
 	{
 		Matrix4x4 rotMat;
 
@@ -89,7 +100,7 @@ public:
 			eul.m_z = 0;
 		}
 
-		return eul * Rad2Deg;
+		return eul;
 	}
 
 	void setRotationX(float x) {

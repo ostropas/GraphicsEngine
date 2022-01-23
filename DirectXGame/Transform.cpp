@@ -2,72 +2,69 @@
 
 Transform::Transform()
 {
-	m_localScale = Vector3D(1, 1, 1);
-	m_localPos = Vector3D();
-	m_localRot = Vector3D();
-	CalcMembers();
+	m_localMatrix.setIdentity();
+	m_worldMatrix.setIdentity();
 }
 
 
 void Transform::SetPosition(const Vector3D& pos)
 {
-	m_pos = pos;
-	Vector3D globalOffset;
-	std::shared_ptr<Transform> parentTransform = GetParent();
-	while (parentTransform)
-	{
-		globalOffset += parentTransform->GetLocalPosition();
-		parentTransform = GetParent();
-	}
-	m_localPos = m_pos - globalOffset;
+	Matrix4x4 tmp;
+	tmp.setIdentity();
+	tmp *= m_worldMatrix.extractScale();
+	tmp *= m_worldMatrix.extractRotation();
+	tmp.setTranslation(pos);
+	m_worldMatrix.setMatrix(tmp);
 }
 
 void Transform::SetLocalPosition(const Vector3D& pos)
 {
-	m_localPos = pos;
-	CalcMembers();
+	Matrix4x4 tmp;
+	tmp.setIdentity();
+	tmp *= m_localMatrix.extractScale();
+	tmp *= m_localMatrix.extractRotation();
+	tmp.setTranslation(pos);
+	m_localMatrix.setMatrix(tmp);
 }
 
 void Transform::SetRotation(const Vector3D& rot)
 {
-	m_rot = rot;
-	Vector3D globalOffset;
-	std::shared_ptr<Transform> parentTransform = GetParent();
-	while (parentTransform)
-	{
-		globalOffset += parentTransform->GetLocalRotation();
-		parentTransform = GetParent();
-	}
-	m_localRot = m_rot - globalOffset;
+	Matrix4x4 tmp;
+	tmp.setIdentity();
+	tmp.setRotation(rot * Deg2Rad);
+	tmp*= m_worldMatrix.extractScale();
+	tmp.setTranslation(m_worldMatrix.getTranslation());
+	m_worldMatrix.setMatrix(tmp);
 }
 
 void Transform::SetLocalRotation(const Vector3D& rot)
 {
-	m_localRot = rot;
-	CalcMembers();
+	Matrix4x4 tmp;
+	tmp.setIdentity();
+	tmp.setRotation(rot * Deg2Rad);
+	tmp*= m_localMatrix.extractScale();
+	tmp.setTranslation(m_localMatrix.getTranslation());
+	m_localMatrix.setMatrix(tmp);
 }
 
 void Transform::SetLocalScale(const Vector3D& scale)
 {
-	m_localScale = scale;
+	Matrix4x4 tmp;
+	tmp.setIdentity();
+	tmp.setScale(scale);
+	tmp*= m_localMatrix.extractRotation();
+	tmp.setTranslation(m_localMatrix.getTranslation());
+	m_localMatrix.setMatrix(tmp);
 }
 
 void Transform::SetScale(const Vector3D& scale)
 {
-	m_scale = scale;
-	Vector3D globalScale;
-	std::shared_ptr<Transform> parentTransform = GetParent();
-	while (parentTransform)
-	{
-		Vector3D parentScale = parentTransform->GetLocalScale();
-		globalScale = Vector3D(
-			globalScale.m_x * parentScale.m_x,
-			globalScale.m_y * parentScale.m_y,
-			globalScale.m_z * parentScale.m_z
-		);
-		parentTransform = GetParent();
-	}
-	m_localScale = m_scale - globalScale;
+	Matrix4x4 tmp;
+	tmp.setIdentity();
+	tmp.setScale(scale);
+	tmp*= m_worldMatrix.extractRotation();
+	tmp.setTranslation(m_worldMatrix.getTranslation());
+	m_worldMatrix.setMatrix(tmp);
 }
 
 void Transform::SetParent(const std::shared_ptr<Transform>& transform)
@@ -93,26 +90,6 @@ void Transform::Update()
 
 void Transform::CalcMembers()
 {
-	Vector3D globalPos = m_localPos;
-	Vector3D globalRot = m_localRot;
-	Vector3D globalScale = m_localScale;
-	std::shared_ptr<Transform> parentTransform = GetParent();
-	while (parentTransform)
-	{
-		globalPos += parentTransform->GetLocalPosition();
-		globalRot += parentTransform->GetLocalRotation();
-
-		Vector3D parentScale = parentTransform->GetLocalScale();
-		globalScale = Vector3D(
-			globalScale.m_x * parentScale.m_x,
-			globalScale.m_y * parentScale.m_y,
-			globalScale.m_z * parentScale.m_z
-		);
-
-		parentTransform = GetParent();
-	}
-	m_pos = globalPos;
-	m_rot = globalRot;
-	m_scale = globalScale;
+	
 }
 

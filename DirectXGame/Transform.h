@@ -2,6 +2,8 @@
 #include "Vector3D.h";
 #include <memory>
 #include <vector>
+#include "Matrix4x4.h"
+#include "MathUtils.h"
 
 class Transform
 {
@@ -9,30 +11,30 @@ public:
 	Transform();
 
 	Vector3D GetPosition() const {
-		return m_pos;
+		return m_worldMatrix.getTranslation();
 	}
 	void SetPosition(const Vector3D& pos);
 	Vector3D GetLocalPosition() const {
-		return m_localPos;
+		return m_localMatrix.getTranslation();
 	}
 	void SetLocalPosition(const Vector3D& pos);
 
 	Vector3D GetRotation() const {
-		return m_rot;
+		return m_worldMatrix.extractRotation().getEulerAngles() * Rad2Deg;
 	}
 	void SetRotation(const Vector3D& rot);
 	Vector3D GetLocalRotation() const {
-		return m_localRot;
+		return m_localMatrix.extractRotation().getEulerAngles() * Rad2Deg;
 	}
 	void SetLocalRotation(const Vector3D& rot);
 
 	Vector3D GetLocalScale() const {
-		return m_localScale;
+		return m_localMatrix.extractScale().getScale();
 	}
 	void SetLocalScale(const Vector3D& scale);
 
 	Vector3D GetScale() const {
-		return m_scale;
+		return m_worldMatrix.extractScale().getScale();
 	}
 	void SetScale(const Vector3D& scale);
 
@@ -48,13 +50,8 @@ private:
 	void SetChild(const std::shared_ptr<Transform>& transform);
 	std::shared_ptr<Transform> m_parent;
 	std::vector<std::shared_ptr<Transform>> m_childs;
-	Vector3D m_localPos;
-	Vector3D m_localScale;
-	Vector3D m_localRot;
-
-	Vector3D m_pos;
-	Vector3D m_rot;
-	Vector3D m_scale;
+	Matrix4x4 m_worldMatrix;
+	Matrix4x4 m_localMatrix;
 
 	void CalcMembers();
 };
