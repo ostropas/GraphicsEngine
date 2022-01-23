@@ -123,8 +123,8 @@ void SpaceShooterGame::updateThirdPersonCamera()
 	Matrix4x4 world_cam, temp;
 	world_cam.setIdentity();
 
-	m_cam_rot.m_x += m_delta_mouse_y * m_delta_time * 0.1f;
-	m_cam_rot.m_y += m_delta_mouse_x * m_delta_time * 0.1f;
+	m_cam_rot.m_x -= m_delta_mouse_y * m_delta_time * 0.1f;
+	m_cam_rot.m_y -= m_delta_mouse_x * m_delta_time * 0.1f;
 
 	if (m_cam_rot.m_x >= 1.57f)
 		m_cam_rot.m_x = 1.57f;
@@ -199,15 +199,7 @@ void SpaceShooterGame::updateModel(Vector3D position, Vector3D rotation, Vector3
 	cc.m_world *= temp;
 
 	temp.setIdentity();
-	temp.setRotationX(rotation.m_x);
-	cc.m_world *= temp;
-
-	temp.setIdentity();
-	temp.setRotationY(rotation.m_y);
-	cc.m_world *= temp;
-
-	temp.setIdentity();
-	temp.setRotationZ(rotation.m_z);
+	temp.setRotation(rotation);
 	cc.m_world *= temp;
 
 	temp.setIdentity();
@@ -248,8 +240,8 @@ void SpaceShooterGame::updateSpaceship()
 	Matrix4x4 world_model;
 	world_model.setIdentity();
 
-	m_spaceship_rot.m_x += m_delta_mouse_y * m_delta_time * 0.1f;
-	m_spaceship_rot.m_y += m_delta_mouse_x * m_delta_time * 0.1f;
+	m_spaceship_rot.m_x -= m_delta_mouse_y * m_delta_time * 0.1f;
+	m_spaceship_rot.m_y -= m_delta_mouse_x * m_delta_time * 0.1f;
 
 	if (m_spaceship_rot.m_x >= 1.57f)
 		m_spaceship_rot.m_x = 1.57f;
@@ -264,7 +256,10 @@ void SpaceShooterGame::updateSpaceship()
 
 	spaceshipTransform->SetRotation(currentRot);
 
-	world_model *= Matrix4x4::crateRotationMatrix(currentRot);
+	Matrix4x4 tmp;
+	tmp.setIdentity();
+	tmp.setRotation(currentRot);
+	world_model *= tmp;
 
 	m_spaceship_speed = 125.0f;
 

@@ -15,6 +15,11 @@ public:
 
 	}
 
+	float magnitute() const
+	{
+		return sqrt(pow(m_x, 2) + pow(m_y, 2) + pow(m_z, 2));
+	}
+
 	static Vector3D lerp(const Vector3D& start, const Vector3D& end, float delta) {
 		Vector3D v;
 		v.m_x = start.m_x * (1 - delta) + end.m_x * delta;

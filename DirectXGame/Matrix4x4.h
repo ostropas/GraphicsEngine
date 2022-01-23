@@ -2,6 +2,8 @@
 #include <memory>
 #include "Vector3D.h"
 #include "Vector4D.h"
+#include "MathUtils.h"
+
 
 class Matrix4x4
 {
@@ -32,35 +34,100 @@ public:
 		m_mat[2][2] = scale.m_z;
 	}
 
+	Vector3D getScale() const
+	{
+		float vector[] = { 0,0,0 };
+		Vector3D scale;
+		for (int i = 0; i < 3; i++) {
+			vector[i] = sqrt(
+				m_mat[i][0] * m_mat[i][0]
+				+ m_mat[i][1] * m_mat[i][1]
+				+ m_mat[i][2] * m_mat[i][2]);
+		}
+
+		return Vector3D(vector[0], vector[1], vector[2]);
+	}
+
+	Matrix4x4 extractRotMat() const
+	{
+		Matrix4x4 rotMat;
+
+		float sx = Vector3D(m_mat[0][0], m_mat[1][0], m_mat[2][0]).magnitute();
+		float sy = Vector3D(m_mat[0][1], m_mat[1][1], m_mat[2][1]).magnitute();
+		float sz = Vector3D(m_mat[0][2], m_mat[1][2], m_mat[2][2]).magnitute();
+
+		rotMat.setIdentity();
+		rotMat.m_mat[0][0] = m_mat[0][0] / sx;
+		rotMat.m_mat[1][0] = m_mat[1][0] / sx;
+		rotMat.m_mat[2][0] = m_mat[2][0] / sx;
+
+		rotMat.m_mat[0][1] = m_mat[0][1] / sy;
+		rotMat.m_mat[1][1] = m_mat[1][1] / sy;
+		rotMat.m_mat[2][1] = m_mat[2][1] / sy;
+
+		rotMat.m_mat[0][2] = m_mat[0][2] / sz;
+		rotMat.m_mat[1][2] = m_mat[1][2] / sz;
+		rotMat.m_mat[2][2] = m_mat[2][2] / sz;
+
+		return rotMat;
+	}
+
+	Vector3D getEulerAngles() const
+	{
+		Vector3D eul;
+
+		eul.m_y = asinf(m_mat[0][2]);
+
+		if (m_mat[0][2] < 0.9999)
+		{
+			eul.m_x = atan2f(-m_mat[1][2], m_mat[2][2]);
+			eul.m_z = atan2f(-m_mat[0][1], m_mat[0][0]);
+		}
+		else
+		{
+			eul.m_x = atan2f(m_mat[2][1], m_mat[1][1]);
+			eul.m_z = 0;
+		}
+
+		return eul * Rad2Deg;
+	}
+
 	void setRotationX(float x) {
 		m_mat[1][1] = cos(x);
-		m_mat[1][2] = sin(x);
-		m_mat[2][1] = -sin(x);
+		m_mat[1][2] = -sin(x);
+		m_mat[2][1] = sin(x);
 		m_mat[2][2] = cos(x);
 	}
 
 	void setRotationY(float y) {
 		m_mat[0][0] = cos(y);
-		m_mat[0][2] = -sin(y);
-		m_mat[2][0] = sin(y);
+		m_mat[0][2] = sin(y);
+		m_mat[2][0] = -sin(y);
 		m_mat[2][2] = cos(y);
 	}
 
 	void setRotationZ(float z) {
 		m_mat[0][0] = cos(z);
-		m_mat[0][1] = sin(z);
-		m_mat[1][0] = -sin(z);
+		m_mat[0][1] = -sin(z);
+		m_mat[1][0] = sin(z);
 		m_mat[1][1] = cos(z);
 	}
 
-	static Matrix4x4 crateRotationMatrix(const Vector3D& eul)
+	void setRotation(const Vector3D& eul)
 	{
 		Matrix4x4 tmp;
+
 		tmp.setIdentity();
 		tmp.setRotationX(eul.m_x);
+		*this *= tmp;
+
+		tmp.setIdentity();
 		tmp.setRotationY(eul.m_y);
+		*this *= tmp;
+
+		tmp.setIdentity();
 		tmp.setRotationZ(eul.m_z);
-		return tmp;
+		*this *= tmp;
 	}
 
 	void operator *=(const Matrix4x4& matrix) {
@@ -77,7 +144,14 @@ public:
 		setMatrix(out);
 	}
 
-	float getDeterminant()
+	friend Matrix4x4 operator *(Matrix4x4 lhs, const Matrix4x4& rhs)
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+
+
+	float getDeterminant() const
 	{
 		Vector4D minor, v1, v2, v3;
 		float det;
@@ -144,8 +218,8 @@ public:
 	{
 		return Vector3D(m_mat[1][0], m_mat[1][1], m_mat[1][2]);
 	}
-	
-	Vector3D getTranslation() {
+
+	Vector3D getTranslation() const {
 		return Vector3D(m_mat[3][0], m_mat[3][1], m_mat[3][2]);
 	}
 
@@ -157,7 +231,7 @@ public:
 		m_mat[1][1] = yscale;
 		m_mat[2][2] = zfar / (zfar - znear);
 		m_mat[2][3] = 1.0f;
-		m_mat[3][2] = (-znear*zfar)/(zfar - znear);
+		m_mat[3][2] = (-znear * zfar) / (zfar - znear);
 	}
 
 	void setOrthoLH(float width, float height, float near_plane, float far_plane)
